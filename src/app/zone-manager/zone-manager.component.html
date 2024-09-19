@@ -1,0 +1,36 @@
+<div>
+    <h2>Zone Manager</h2>
+    
+     <div>
+         <!-- Button to initiate drawing -->
+         <button (click)="startDrawing()">Draw New Zone</button>
+     </div>
+    <div>
+
+        <!-- SVG Area where polygons will be drawn -->
+        <svg 
+            (click)="addPoint($event)" 
+            id="zoneCanvas" 
+            width="800" 
+            height="600" 
+            style="border: 1px solid black">
+        
+        <!-- Existing polygons (zones) -->
+            <polygon 
+                *ngFor="let zone of zones; let i = index" 
+                [attr.points]="zone.points"
+                stroke="black"
+                fill="transparent"
+                (click)="deleteZone(i)"
+                ></polygon>
+        
+            <!-- Polygon currently being drawn -->
+            <polygon 
+                *ngIf="isDrawing" 
+                [attr.points]="points"
+                stroke="blue" 
+                fill="transparent">
+            </polygon>
+        </svg>
+    </div>
+  </div>
