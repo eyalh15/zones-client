@@ -1,33 +1,42 @@
-<div>
-    <h2>Zone Manager</h2>
-    
-     <div>
-         <!-- Button to initiate drawing -->
-         <button (click)="startDrawing()">Draw New Zone</button>
+<div class="wrapper">   
+     <div class="toggle-container">
+        <mat-button-toggle-group
+        [hideSingleSelectionIndicator]="true" 
+        [(ngModel)]="mode" 
+        (change)="onModeChange($event.value)">
+            <mat-button-toggle value="creation">Creation Mode</mat-button-toggle>
+            <mat-button-toggle value="deletion">Deletion Mode</mat-button-toggle>
+        </mat-button-toggle-group>
      </div>
     <div>
-
         <!-- SVG Area where polygons will be drawn -->
         <svg 
             (click)="addPoint($event)" 
             id="zoneCanvas" 
-            width="800" 
+            width="100%" 
             height="600" 
             style="border: 1px solid black">
         
         <!-- Existing polygons (zones) -->
+         <ng-container *ngFor="let zone of zones; let i = index">
             <polygon 
-                *ngFor="let zone of zones; let i = index" 
                 [attr.points]="zone.points"
                 stroke="black"
                 fill="transparent"
-                (click)="deleteZone(i)"
-                ></polygon>
+                (click)="deleteZone(i)">
+            </polygon>
+            <text 
+                [attr.x]="zone.points[0][0]"
+                [attr.y]="zone.points[0][1]"
+                fill="black">
+                {{zone.name}}
+            </text>
+         </ng-container>
         
             <!-- Polygon currently being drawn -->
             <polygon 
-                *ngIf="isDrawing" 
-                [attr.points]="points"
+                *ngIf="isCreationMode" 
+                [attr.points]="currentPoints"
                 stroke="blue" 
                 fill="transparent">
             </polygon>

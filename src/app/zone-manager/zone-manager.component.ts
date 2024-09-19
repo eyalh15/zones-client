@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Zone } from '../interfaces/zone.interface';
 import { ZoneNameDialogComponent } from '../zone-name-dialog/zone-name-dialog.component';
@@ -8,10 +8,11 @@ import { ServerAccessorService } from '../server-accessor.service';
 @Component({
   selector: 'app-zone-manager',
   templateUrl: './zone-manager.component.html',
-  styleUrls: ['./zone-manager.component.css']
+  styleUrls: ['./zone-manager.component.css'],
 })
 export class ZoneManagerComponent {
-  constructor(public dialog: MatDialog, private serverAccessor: ServerAccessorService) {
+  constructor(public dialog: MatDialog, private serverAccessor: ServerAccessorService
+  ) {
     this.loadZones();
   }
   // Store existing zones as an array of points
@@ -19,34 +20,34 @@ export class ZoneManagerComponent {
 
   // Points for the currently drawn polygon
   currentPoints: [number, number][] = [];
-  points: string = '';
 
-  // Flag for when drawing is active
-  isDrawing: boolean = false;
+  // String mode to bind toggle selection (creation/deletion)
+  mode: string = 'creation'; 
+
+  isCreationMode: boolean = true;
+
 
   // Start drawing a new polygon
   startDrawing() {
     this.currentPoints = [];
-    this.points = ''
-    this.isDrawing = true;
+    this.isCreationMode = true;
   }
 
   // Add a point to the polygon being drawn
   addPoint(event: MouseEvent) {
-    if (this.isDrawing) {
-      const x = event.offsetX;
+    if (this.isCreationMode) {
+      const x = event.offsetX;  
       const y = event.offsetY;
-      this.currentPoints.push([x, y]);
+      this.currentPoints = [...this.currentPoints, [x, y]];
       if(this.currentPoints.length === 4) {
         this.finishDrawing();
       }
-      this.points += `${x},${y} `;
     }
   }
 
   // Finish drawing and save the new polygon
   finishDrawing() {
-    if (this.isDrawing) {
+    if (this.isCreationMode) {
       const dialogRef = this.dialog.open(ZoneNameDialogComponent, {
         width: '300px',
         data: { name: '' }
@@ -57,7 +58,6 @@ export class ZoneManagerComponent {
           this.serverAccessor.createZone(name, this.currentPoints).subscribe(
             (newZone: Zone) => {
               this.zones.push(newZone);
-              this.isDrawing = false;
               this.currentPoints = [];
             }
           );
@@ -68,6 +68,10 @@ export class ZoneManagerComponent {
 
   // Delete a zone from the list
   deleteZone(index: number) {
+    console.log(this.isCreationMode)
+    if(this.isCreationMode) {
+      return;
+    }
     const zoneId = this.zones[index].id;
     this.serverAccessor.deleteZone(zoneId).subscribe(() => {
       this.zones.splice(index, 1);
@@ -78,5 +82,12 @@ export class ZoneManagerComponent {
     this.serverAccessor.fetchZones().subscribe((zones: Zone[]) => {
       this.zones = zones;
     });
+  }
+
+  onModeChange(mode: string) {
+    this.isCreationMode = (mode === 'creation');
+    if(!this.isCreationMode)
+      this.currentPoints = [];
+    console.log(this.zones)
   }
 }
