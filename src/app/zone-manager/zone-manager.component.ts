@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Zone } from '../interfaces/zone.interface';
+import { ZoneNameDialogComponent } from '../zone-name-dialog/zone-name-dialog.component';
+
 
 @Component({
   selector: 'app-zone-manager',
@@ -7,6 +10,7 @@ import { Zone } from '../interfaces/zone.interface';
   styleUrls: ['./zone-manager.component.css']
 })
 export class ZoneManagerComponent {
+  constructor(public dialog: MatDialog) {}
   // Store existing zones as an array of points
   zones: Zone[] = [{ 
       "id": 1, 
@@ -45,16 +49,23 @@ export class ZoneManagerComponent {
   // Finish drawing and save the new polygon
   finishDrawing() {
     if (this.isDrawing) {
-      // ask for zone name
-      const name = 'zone 2';
-      this.zones.push({ 
-        "id": this.zones[this.zones.length -1]['id'] + 1, 
-        "name": name, 
-        "points": this.currentPoints
+      const dialogRef = this.dialog.open(ZoneNameDialogComponent, {
+        width: '250px',
+        data: { name: '' }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.zones.push({ 
+            "id": this.zones[this.zones.length - 1]['id'] + 1, 
+            "name": result, 
+            "points": this.currentPoints
+          });
+          this.isDrawing = false;
+          this.currentPoints = [];
+        }
       });
     }
-    this.isDrawing = false;
-    this.currentPoints = [];
   }
 
   // Delete a zone from the list
