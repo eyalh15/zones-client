@@ -99,7 +99,6 @@ export class ZoneManagerComponent {
         return 
 
       this.deleteZone(zoneIndex);
-      
     });
   }  
 }
