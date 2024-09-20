@@ -1,27 +1,44 @@
-# ZonesClient
+# Zone Manager Client
+This is the client-side application for managing zones through an easy-to-use visualization window, including creating, deleting and fetching zones. The client communicates with the Django-based server API.
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.1.4.
+## Table of Contents
+- Installation
+- Usage
+- API Endpoints
 
-## Development server
+## Installation
+1. **Clone the repository**:
+`git clone https://github.com/eyalh15/zones-client.git`
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+2. **Change directory**:
+`cd zones-client`
 
-## Code scaffolding
+3. **Install dependencies**:
+Make sure you have Node.js and npm installed. Then run:
+`npm install`
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+4. **Start the development server**:
+`npm start`
 
-## Build
+This will start the client application and serve it on `http://localhost:4200/`.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Usage
+- **Creating a Zone**: In the window interface, draw a polygon by connecting points. When you have created polygon with 4 points then it will be added to the zones list.
+- **Fetching Zones**: The zones will automatically be fetched and displayed when the page loads.
+- **Deleting Zones**: Right Click on a zone area and select "Delete" to remove it.
 
-## Running unit tests
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## API Endpoints
+The client communicates with the following server API endpoints:
 
-## Running end-to-end tests
+1. **Fetch Zones** (GET):
+`/api/zones/`
+Retrieves a list of zones.
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+2. **Create Zone** (POST):
+`/api/zones/`
+Sends a new zone to the server.
 
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+3. **Delete Zone** (DELETE):
+`/api/zones/<zone_id>/`
+Deletes the specified zone by its ID.
