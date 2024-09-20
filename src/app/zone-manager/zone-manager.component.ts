@@ -15,15 +15,13 @@ export class ZoneManagerComponent {
   ) {
     this.loadZones();
   }
-  // Store existing zones as an array of points
+  // Store all zones
   zones: Zone[] = [];
-
   // Points for the currently drawn polygon
   currentPoints: [number, number][] = [];
-
-  // String mode to bind toggle selection (creation/deletion)
-  mode: string = 'creation'; 
-
+  // binded to the toggle selector (creation/deletion)
+  toggleMode: string = 'creation'; 
+  // The mode state
   isCreationMode: boolean = true;
 
 
@@ -39,6 +37,7 @@ export class ZoneManagerComponent {
       const x = event.offsetX;  
       const y = event.offsetY;
       this.currentPoints = [...this.currentPoints, [x, y]];
+      // Finish drawing after getting polygon of 4 points
       if(this.currentPoints.length === 4) {
         this.finishDrawing();
       }

@@ -2,7 +2,7 @@
      <div class="toggle-container">
         <mat-button-toggle-group
         [hideSingleSelectionIndicator]="true" 
-        [(ngModel)]="mode" 
+        [(ngModel)]="toggleMode" 
         (change)="onModeChange($event.value)">
             <mat-button-toggle value="creation">Creation Mode</mat-button-toggle>
             <mat-button-toggle value="deletion">Deletion Mode</mat-button-toggle>
