@@ -47,14 +47,17 @@ export class ZoneManagerComponent {
     });
 
     dialogRef.afterClosed().subscribe(name => {
-      if (name) {
-        this.serverAccessor.createZone(name, this.currentPoints).subscribe(
-          (newZone: Zone) => {
-            this.zones.push(newZone);
-            this.currentPoints = [];
-          }
-        );
+      if(!name) {
+        this.currentPoints = [];
+        return;
       }
+      this.serverAccessor.createZone(name, this.currentPoints).subscribe(
+        (newZone: Zone) => {
+          this.zones.push(newZone);
+          this.currentPoints = [];
+        }
+      );
+      
     });
   }
 
